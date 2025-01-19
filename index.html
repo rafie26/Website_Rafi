@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cinnamoroll Love Letter ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #5c6bc0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .cinnamoroll {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            margin: 20px auto;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cinnamoroll:hover {
+            transform: scale(1.1);
+        }
+
+        .ears {
+            position: absolute;
+            top: -30px;
+            width: 40px;
+            height: 60px;
+            background: white;
+            border-radius: 20px;
+        }
+
+        .ear-left {
+            left: 10px;
+            transform: rotate(-30deg);
+        }
+
+        .ear-right {
+            right: 10px;
+            transform: rotate(30deg);
+        }
+
+        .face {
+            position: relative;
+            top: 20px;
+        }
+
+        .eye {
+            width: 10px;
+            height: 10px;
+            background: #5c6bc0;
+            border-radius: 50%;
+            position: absolute;
+            top: 30px;
+        }
+
+        .eye-left { left: 30px; }
+        .eye-right { right: 30px; }
+
+        .nose {
+            width: 12px;
+            height: 8px;
+            background: #ff9999;
+            border-radius: 50%;
+            position: absolute;
+            top: 40px;
+            left: 44px;
+        }
+
+        .message-bubble {
+            background: white;
+            padding: 20px;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 20px;
+            transform-origin: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .message-bubble:hover {
+            transform: scale(1.05);
+        }
+
+        .message-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0;
+            border-style: solid;
+            border-color: white transparent;
+        }
+
+        .interactive-button {
+            background: linear-gradient(135deg, #ff9999, #ff6b6b);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .interactive-button:hover {
+            background: linear-gradient(135deg, #ff6b6b, #ff4d4d);
+            transform: translateY(-3px) scale(1.05);
+        }
+
+        .cookie-game {
+            width: 300px;
+            height: 400px;
+            background: #e3f2fd;
+            border: 3px solid #bbdefb;
+            border-radius: 20px;
+            margin: 20px auto;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .score-display {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 1.2em;
+            color: #5c6bc0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .cinna-basket {
+            width: 80px;
+            height: 60px;
+            background: white;
+            border-radius: 40px 40px 0 0;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            transition: left 0.2s;
+        }
+
+        .falling-cookie {
+            position: absolute;
+            font-size: 24px;
+            animation: cookieFall linear;
+        }
+
+        @keyframes cookieFall {
+            from { top: -30px; }
+            to { top: 100%; }
+        }
+
+        .secret {
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .interactive-button {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="cinnamoroll" onclick="toggleWings()">
+            <div class="ears ear-left"></div>
+            <div class="ears ear-right"></div>
+            <div class="face">
+                <div class="eye eye-left"></div>
+                <div class="eye eye-right"></div>
+                <div class="nose"></div>
+            </div>
+        </div>
+
+        <div class="message-bubble" onclick="showLoveMessage()">
+            <h2>Klik Cobaa</h2>
+        </div>
+
+        <button class="interactive-button" onclick="spreadLove()">Hujan Api 🔥</button>
+        <button class="interactive-button" onclick="toggleCookieGame()">Tangkap Kue 🍪</button>
+        <button class="interactive-button" onclick="makeItRain()">Hujan Salju ☔</button>
+
+        <div class="cookie-game" id="cookieGame">
+            <div class="score-display">Kue tertangkap: <span id="cookieScore">0</span></div>
+            <div class="cinna-basket">
+                <div class="ears ear-left"></div>
+                <div class="ears ear-right"></div>
+                <div class="face">
+                    <div class="eye eye-left"></div>
+                    <div class="eye eye-right"></div>
+                    <div class="nose"></div>
+                </div>
+            </div>
+        </div>
+
+        <p class="secret" id="secretMessage">Aku Suka Mancing</p>
+    </div>
+
+    <script>
+        let cookieScore = 0;
+        let isGameActive = false;
+
+        function toggleWings() {
+            const cinnamoroll = document.querySelector('.cinnamoroll');
+            cinnamoroll.style.transform = 'rotate(360deg)';
+            setTimeout(() => {
+                cinnamoroll.style.transform = 'none';
+            }, 1000);
+            createHearts(5);
+        }
+
+        function showLoveMessage() {
+            const messages = [
+                "Kaka tau ga kalo aku itu...",
+                "Suka Main Roblox",
+                "Apa Lagi Game Mancingg",
+                "APA LAGI BARENG KAKA"
+            ];
+            const bubble = document.querySelector('.message-bubble');
+            bubble.innerHTML = `<h2>${messages[Math.floor(Math.random() * messages.length)]}</h2>`;
+            createHearts(3);
+        }
+
+        function spreadLove() {
+            for (let i = 0; i < 10; i++) {
+                createHearts(1);
+            }
+        }
+
+        function createHearts(count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.innerHTML = '❤️';
+                    heart.style.position = 'fixed';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = '-50px';
+                    heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                    heart.style.animation = 'falling ' + (Math.random() * 3 + 2) + 's linear infinite';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, i * 200);
+            }
+        }
+
+        function toggleCookieGame() {
+            const game = document.getElementById('cookieGame');
+            isGameActive = !isGameActive;
+            game.style.display = isGameActive ? 'block' : 'none';
+            if (isGameActive) {
+                cookieScore = 0;
+                document.getElementById('cookieScore').textContent = cookieScore;
+                startCookieGame();
+            }
+        }
+
+        function startCookieGame() {
+            const game = document.getElementById('cookieGame');
+            const basket = document.querySelector('.cinna-basket');
+            const cookies = ['🍪', '🍩', '🧁', '🎂'];
+
+            function moveBasket(e) {
+                if (!isGameActive) return;
+                const gameRect = game.getBoundingClientRect();
+                const x = e.clientX - gameRect.left - basket.offsetWidth / 2;
+                const maxX = game.offsetWidth - basket.offsetWidth;
+                basket.style.left = Math.max(0, Math.min(x, maxX)) + 'px';
+            }
+
+            game.addEventListener('mousemove', moveBasket);
+            game.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                moveBasket(e.touches[0]);
+            });
+
+            function createCookie() {
+                if (!isGameActive) return;
+                
+                const cookie = document.createElement('div');
+                cookie.className = 'falling-cookie';
+                cookie.textContent = cookies[Math.floor(Math.random() * cookies.length)];
+                cookie.style.left = Math.random() * (game.offsetWidth - 30) + 'px';
+                game.appendChild(cookie);
+
+                const speed = 2 + Math.random() * 2;
+                cookie.style.animation = `cookieFall ${speed}s linear`;
+
+                const checkCollision = setInterval(() => {
+                    if (!isGameActive) {
+                        clearInterval(checkCollision);
+                        return;
+                    }
+
+                    const cookieRect = cookie.getBoundingClientRect();
+                    const basketRect = basket.getBoundingClientRect();
+
+                    if (cookieRect.bottom >= basketRect.top &&
+                        cookieRect.right >= basketRect.left &&
+                        cookieRect.left <= basketRect.right) {
+                        cookie.remove();
+                        clearInterval(checkCollision);
+                        cookieScore++;
+                        document.getElementById('cookieScore').textContent = cookieScore;
+                        createHearts(1);
+                    }
+                }, 50);
+
+                cookie.addEventListener('animationend', () => {
+                    cookie.remove();
+                    clearInterval(checkCollision);
+                });
+            }
+
+            const cookieInterval = setInterval(() => {
+                if (isGameActive) {
+                    createCookie();
+                } else {
+                    clearInterval(cookieInterval);
+                }
+            }, 1000);
+        }
+
+        function makeItRain() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const cinna = document.createElement('div');
+                    cinna.className = 'cinnamoroll';
+                    cinna.style.position = 'fixed';
+                    cinna.style.left = Math.random() * 100 + 'vw';
+                    cinna.style.top = '-100px';
+                    cinna.style.animation = 'falling ' + (Math.random() * 3 + 2) + 's linear infinite';
+                    document.body.appendChild(cinna);
+                    setTimeout(() => cinna.remove(), 5000);
+                }, i * 300);
+            }
+        }
+
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes falling {
+                    to {
+                        transform: translateY(100vh) rotate(360deg);
+                    }
+                }
+            </style>
+        `);
+    </script>
+</body>
+</html>
